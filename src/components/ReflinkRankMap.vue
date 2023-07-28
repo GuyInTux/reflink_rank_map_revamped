@@ -81,23 +81,19 @@ export default {
                 draggable: false,
                 zoomButtons: false,
                 zoomOnScroll: false,
-                onRegionTooltipShow(event, tooltip) {
+                onRegionTooltipShow(event, tooltip, code) { // can customise tooltip specific to event and country
+                    if (code === 'US') {
+                        tooltip.text(`
+                            <h3>USA</h3>
+                            <p>The United States</p>
+                        `, true)
+                    }
                     tooltip.css({ backgroundColor: 'black' }); // tooltip customization
                     tooltip.text(
                         tooltip.text(),
                         true // enable HTML
                     );
                 },
-
-                // enable the country_code argument if you want dynamic tooltip content
-                //         onRegionTooltipShow(event, tooltip, code) {
-                //             if (code === 'US') {
-                //                 tooltip.text(`
-                //     <h3>USA</h3>
-                //     <p>The United States</p>
-                //   `, true)
-                //             }
-                //         }
 
             });
             // Adds removeSelection method to instance
@@ -124,12 +120,12 @@ export default {
             this.updateFills();
         },
         updateFills() {
-            // For testing purposes
+            // For testing purposes, sort countries by dial_code(used as reflink count for purpose of demo) and get top 5
             // const topCountries = this.countries.sort((a, b) => b.dial_code - a.dial_code)
             //     .slice(0, 5)
             //     .map(country => country.country.toUpperCase());
 
-            // For demo purposes
+            // For demo purposes. Note: use Uppercase ISO2 code
             const topCountries = ["US", "BR", "MY", "CN", "ID"]
 
             // Add top countries to selectedRegions
@@ -138,6 +134,7 @@ export default {
             });
         },
 
+        // Check which country/region is not supported
         testAllCountry() {
             const allCountries = this.countries.map(country => country.country.toUpperCase());
             allCountries.forEach(country => {
